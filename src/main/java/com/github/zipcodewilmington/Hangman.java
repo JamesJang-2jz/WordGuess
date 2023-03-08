@@ -29,12 +29,12 @@ public class Hangman {
                 }
             }
     }
-    public static boolean yesNo(String input) {
+    public static void yesNo(String input) {
         if (Objects.equals(input, "yes")) {
             gameOn = true;
         } else if (Objects.equals(input, "no")) {
             gameOn = false;
-        } return gameOn;
+        }
     }
     public static void main(String[] args) {
         Hangman game = new Hangman();
@@ -44,8 +44,7 @@ public class Hangman {
         for (int i = 0; i < secretWord.length(); i++) {
             checker[i] = '-';
         }
-//        while (true) {
-            do {
+        while (gameOn) {
                 char input = scan.nextLine().charAt(0);
                 revealWord(input);
                 guessCount--;
@@ -62,11 +61,6 @@ public class Hangman {
                     String play = scan.nextLine();
                     yesNo(play);
                 }
-            } while (gameOn);
-//            (!Arrays.equals(checker, secretArray));
-//            System.out.println("Play Again? yes or no");
-//            String play = scan.nextLine();
-//            yesNo(play);
-//            }
+            }
     }
 }

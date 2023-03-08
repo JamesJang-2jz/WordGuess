@@ -1,7 +1,6 @@
 package com.github.zipcodewilmington;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 // James Jang
 /**
@@ -14,20 +13,17 @@ public class Hangman {
     static String[] wordBank = {"badminton","boast", "toast", "prime", "paint",
             "expert", "array", "moose", "goose","integer","bloat","rubble","spring"};
     static String secretWord = wordBank[(int)(Math.random() * wordBank.length)];
-    static String[] secretArray = secretWord.split("");
-    int maxGuess;
-    static int guessCount = 0;
-    static String[] checker;
-    static String holder = "";
+    static char[] secretArray = secretWord.toCharArray();
+    int zeroGuess;
+    static int guessCount = 5;
+    static char[] checker = new char[secretWord.length()];
     public Hangman() {
-        maxGuess = 4;
+        zeroGuess = 0;
     }
-    public static void revealWord(String input) {
-            for (int i = 0; i <= secretWord.length() - 1; i++) {
-                if (input.equalsIgnoreCase(String.valueOf(secretArray[i]))) {
-                    secretArray[i] = input;
-                } else {
-                    secretArray[i] = "-";
+    public static void revealWord(char input) {
+            for (int i = 0; i < secretWord.length(); i++) {
+                if (input == (secretArray[i])) {
+                    checker[i] = input;
                 }
             }
     }
@@ -36,29 +32,19 @@ public class Hangman {
         Scanner scan = new Scanner(System.in);
         System.out.print("Word Game! Enter a letter: ");
         System.out.println(secretWord);
+        for (int i = 0; i < secretWord.length(); i++) {
+            checker[i] = '-';
+        }
         do {
-            String guess = scan.nextLine();
-            revealWord(guess);
-//            System.out.println(Arrays.toString(checker));
-            System.out.println(Arrays.toString(secretArray));
-        } while (!Arrays.equals(checker, secretArray));
-//            if (guess == String.valueOf(secretArray[i])) {
-//            String display = revealWord(guess);
-            //System.out.println(secretArray); //this works for now
-            guessCount++;
-            // for loop to check each letter against guess
-//            for (int i = 0; i < secretWord.length(); i++) {
-//                if (guess.equals(Character.toString(secretWord.charAt(i)))) {
-//                if arr[0] == guess, change display[0] to guess letter
-//                }
-//            }
-            // array back into string. if string == secretword, end game
-    }
-        // sout game over or winner
-////        System.out.println(secretArray);
-//        System.out.println(secretWord);
-    }
+            char input = scan.nextLine().charAt(0);
+            revealWord(input);
+            System.out.println(checker);
+            System.out.println("You have " + (guessCount) + " guesses left.");
+            if (guessCount == game.zeroGuess) {
+                System.out.println("you lost!");
+            }
+            guessCount--;
 
-//            for (int i = 0; i <= secretWord.length() - 1; i++) {
-//                System.out.print("-");
-//            }
+        } while (!Arrays.equals(checker, secretArray));
+    }
+}

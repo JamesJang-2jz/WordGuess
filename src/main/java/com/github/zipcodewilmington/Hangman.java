@@ -10,57 +10,76 @@ import java.util.Scanner;
  * @date 5/27/21 11:02 AM
  */
 public class Hangman {
-    static boolean gameOn = true;
-    static String yesNo = "";
-    static String[] wordBank = {"badminton","boast", "toast", "prime", "paint",
-            "expert", "array", "moose", "goose","integer","bloat","rubble","spring"};
-    static String secretWord = wordBank[(int)(Math.random() * wordBank.length)];
-    static char[] secretArray = secretWord.toCharArray();
+    static boolean playAgain = true;
+    static boolean gameOver = true;
+    static String[] wordBank = {"badminton", "boast", "toast", "prime", "paint",
+            "expert", "array", "moose", "goose", "integer", "bloat", "rubble", "spring"};
+    static String secretWord;
+    static char[] secretArray;
     int zeroGuess;
-    static int guessCount = secretWord.length() + 3;
-    static char[] checker = new char[secretWord.length()];
+    static int guessCount;
+    static char[] checker;
+    static Scanner scan = new Scanner(System.in);
     public Hangman() {
         zeroGuess = 0;
     }
     public static void revealWord(char input) {
-            for (int i = 0; i < secretWord.length(); i++) {
-                if (input == (secretArray[i])) {
-                    checker[i] = input;
-                }
+        for (int i = 0; i < secretWord.length(); i++) {
+            if (input == (secretArray[i])) {
+                checker[i] = input;
             }
+        }
+    }
+    public String getSecretWord() {
+        String result = wordBank[(int) (Math.random() * wordBank.length)];
+        secretArray = result.toCharArray();
+        guessCount = result.length() + 3;
+        checker = new char[result.length()];
+        return result;
     }
     public static void yesNo(String input) {
-        if (Objects.equals(input, "yes")) {
-            gameOn = true;
-        } else if (Objects.equals(input, "no")) {
-            gameOn = false;
+        if (Objects.equals(input.toLowerCase(), "yes")) {
+            playAgain = true;
+            gameOver = true;
+        } else if (Objects.equals(input.toLowerCase(), "no")) {
+            playAgain = false;
         }
+    }
+    public static void gameOver(){
+        gameOver = false;
     }
     public static void main(String[] args) {
         Hangman game = new Hangman();
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Word Game! Enter a letter: ");
-        System.out.println(secretWord);
-        for (int i = 0; i < secretWord.length(); i++) {
-            checker[i] = '-';
-        }
-        while (gameOn) {
+        while (playAgain) {
+            System.out.print("Word Game! Enter a letter: ");
+            secretWord = game.getSecretWord();
+            for (int i = 0; i < secretWord.length(); i++) {
+                checker[i] = '-';
+            }
+            do {
                 char input = scan.nextLine().charAt(0);
                 revealWord(input);
                 guessCount--;
                 System.out.println(checker);
                 System.out.println("You have " + (guessCount) + " guesses left.");
                 if (guessCount == game.zeroGuess) {
-                    System.out.println("You lost!");
-                    System.out.println("Play Again? yes or no");
-                    String play = scan.nextLine();
-                    yesNo(play);
-                } else if (checker == secretArray) {
-                    System.out.println("You Win! the secret word is " + secretWord);
-                    System.out.println("Play Again? yes or no");
-                    String play = scan.nextLine();
-                    yesNo(play);
+                    gameOver();
+                } else if (Arrays.equals(checker, secretArray)){
+                    gameOver();
                 }
+            } while (gameOver);
+            if (guessCount == game.zeroGuess) {
+                System.out.println("You lost!");
+                System.out.println("Play Again? yes or no");
+                String play = scan.nextLine();
+                yesNo(play);
+            } else if (Arrays.equals(checker, secretArray)) {
+                System.out.println("You Win! the secret word is " + secretWord);
+                System.out.println("Play Again? yes or no");
+                String play = scan.nextLine();
+                yesNo(play);
             }
-    }
+        }
+        }
+
 }
